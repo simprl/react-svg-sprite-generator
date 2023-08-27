@@ -121,6 +121,17 @@ For our example icons, the **Readme.md** will look like:
 | ![](data:image/png;base64,...)         | GROUP1_ICON2  | group1/icon2.svg|
 ```
 
+### Image Preview
+
+![](./assets/autocomplete.gif)
+
+The unique feature of the generated names.js is the inclusion of inline Base64 encoded previews of the SVG icons.
+This means that in certain IDEs with markdown preview or image tooltip capabilities, you can actually hover over
+the constant or view the names.js file to see a visual representation of the corresponding icon.
+
+Hovering over GROUP1_ICON1 or viewing the names.js directly will show a small image preview of the icon.
+This visual feedback is invaluable when you're trying to pick the right icon for a specific context in your application.
+
 ### **Conclusion**
 
 The **react-svg-sprite-generator** is a powerful tool for managing SVG icons in React projects. It streamlines the process of creating sprites and provides an easy-to-reference documentation for developers.
