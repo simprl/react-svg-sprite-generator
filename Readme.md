@@ -79,12 +79,12 @@ src
 
 ```xml
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <symbol id="ICONS_ICON1" viewBox="0 0 24 24">
+    <symbol id="GROUP1_ICON1" viewBox="0 0 24 24">
         <!-- SVG content of icon1.svg -->
         <path d="..."></path>
         <!-- ... other SVG elements of icon1.svg ... -->
     </symbol>
-    <symbol id="ICONS_ICON2" viewBox="0 0 24 24">
+    <symbol id="GROUP1_ICON2" viewBox="0 0 24 24">
         <!-- SVG content of icon2.svg -->
         <path d="..."></path>
         <!-- ... other SVG elements of icon2.svg ... -->
