@@ -1,6 +1,6 @@
 {
   "name": "react-svg-sprite-generator",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Svg sprite generator for Reactjs. You can generate sprite from a folder of the svg files",
   "keywords": [
     "react",
@@ -24,5 +24,9 @@
     "gulpfile.js",
     "cli.js",
     "Readme.md"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/simprl/react-svg-sprite-generator"
+  }
 }
