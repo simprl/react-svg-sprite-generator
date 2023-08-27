@@ -1,6 +1,6 @@
 {
   "name": "react-svg-sprite-generator",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Svg sprite generator for Reactjs. You can generate sprite from a folder of the svg files",
   "keywords": [
     "react",
@@ -11,11 +11,15 @@
   "license": "ISC",
   "dependencies": {
     "gulp": "^4.0.2",
-    "gulp-filelist": "^2.0.5",
+    "gulp-clone": "^2.0.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-each": "^0.5.0",
     "gulp-imagemin": "^7.0.0",
     "gulp-rename": "^2.0.0",
     "gulp-sort": "^2.0.0",
-    "gulp-svgstore": "^9.0.0"
+    "gulp-svgstore": "^9.0.0",
+    "merge-stream": "^2.0.0",
+    "sharp": "^0.32.5"
   },
   "bin": {
     "svgsprite": "./cli.js"

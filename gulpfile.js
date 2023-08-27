@@ -4,8 +4,11 @@ const imagemin = require('gulp-imagemin');
 const svgstore = require('gulp-svgstore');
 const rename = require('gulp-rename');
 const sort = require('gulp-sort');
-const filelist = require('gulp-filelist');
-const log = require('fancy-log');
+const each = require('gulp-each');
+const concat = require('gulp-concat');
+const sharp = require('sharp');
+const gulpClone = require("gulp-clone");
+const mergeStream = require('merge-stream');
 
 const getArg = (name, def) => {
     const srcIndex = process.argv.indexOf(name);
@@ -15,7 +18,7 @@ const getArg = (name, def) => {
 const getArgDir = (name, def) => {
     const rootPath = getArg("--cwd", "");
     const relativePath = getArg(name, def);
-    const absPath = path.join(rootPath, relativePath);
+    const absPath = path.isAbsolute(relativePath) ? relativePath : path.join(rootPath, relativePath);
     console.log(`${name}: ${absPath}`);
     return absPath;
 }
@@ -32,28 +35,40 @@ const renameFunc2 = (file) => {
         .toUpperCase();
 };
 
+const renameFunc3 = (filePath) => {
+
+    return filePath.split('\\').join('_')
+        .replace(/[^\d\w]+/g, '_')
+        .toUpperCase();
+};
+
 gulp.task('svg-sprite', () => {
     const src = getSrcDir();
     const dest = getDestDir();
-    return gulp
+
+    const optimizeSvg = gulp
         .src([
             `${src}/**/*.svg`,
             `!${src}/sprite.svg`,
             `!${src}/otherFiles/**/*.svg`,
         ])
-        .pipe(rename(renameFunc2))
-        .pipe(sort())
         .pipe(
             imagemin([
                 imagemin.svgo({
                     plugins: [
-                        { removeViewBox: false },
-                        { cleanupIDs: false },
-                        { removeAttrs: { attrs: ['fill', 'stroke'] } },
+                        {removeViewBox: false},
+                        {cleanupIDs: false},
+                        {removeAttrs: {attrs: ['fill', 'stroke']}},
                         // { removeElementsByAttr: { id: ('bg') } },
                     ],
                 }),
-            ])        )
+            ])
+        );
+
+    const sprite = optimizeSvg
+        .pipe(gulpClone())
+        .pipe(rename(renameFunc2))
+        .pipe(sort())
         .pipe(
             svgstore({
                 inlineSvg: true,
@@ -61,36 +76,62 @@ gulp.task('svg-sprite', () => {
         )
         .pipe(rename('sprite.svg'))
         .pipe(gulp.dest(dest))
-    }
-);
 
-gulp.task('svg-list', () => {
-    let isFirst = true;
-    const src = getSrcDir();
-    const dest = getDestDir();
-    return gulp
-        .src([
-            `${src}/**/*.svg`,
-            `!${src}/sprite.svg`,
-            `!${src}/otherFiles/**/*.svg`,
-        ])
-        .pipe(rename(renameFunc2))
-        .pipe(sort())
-        .pipe(
-            filelist('names.js', {
-                relative: true,
-                removeExtensions: true,
-                destRowTemplate: (filePath) => {
+    const names = optimizeSvg
+        .pipe(gulpClone())
+        .pipe(each(function (content, file, callback) {
+            sharp(content)
+                .resize(64, 64)
+                .png()
+                .toBuffer(function (err, data, info) {
+                    if (err) {
+                        callback(err);
+                    } else {
+                        const base64String = `data:image/png;base64,${data.toString('base64')}`;
+                        file.contents = Buffer.from(base64String);
+                        callback(null, file.contents);
+                    }
+                });
+        }, 'buffer'))
+        .pipe(each(function (content, file, callback) {
+            const filePath = path.join(
+                path.dirname(file.relative),
+                path.basename(file.relative, path.extname(file.relative))
+            );
+            const name = renameFunc3(filePath);
 
-                    const fileName = path.basename(filePath);
-                    const name = fileName
-                        .replace(/[^\d\w]+/g, '_')
-                        .toUpperCase();
-                    const prefix = isFirst ? '' : '\r\n';
-                    isFirst = false;
-                    return `${prefix}// ${filePath}\r\nexport const ${name} = '${fileName}';\r\n`;
-                },
-            })
-        )
+            const result = `/**
+ * ![](${content})  
+ * ${filePath.split('\\').join('/')}.svg
+ */
+export const ${name} = '${name}';
+`;
+            callback(null, result);
+        }))
+        .pipe(concat('names.js'))
         .pipe(gulp.dest(dest));
+
+
+    const readme = optimizeSvg
+        .pipe(gulpClone())
+        .pipe(each(function (content, file, callback) {
+            const filePath = path.join(
+                path.dirname(file.relative),
+                path.basename(file.relative, path.extname(file.relative))
+            );
+            const name = renameFunc3(filePath);
+
+            const result = `| ${content} | ${name} | ${filePath.split('\\').join('/')}.svg |`;
+            callback(null, result);
+        }))
+        .pipe(concat('Readme.md', {}))
+        .pipe(each(function (content, file, callback) {
+            const result = `| Icon | Name | Path |
+|---|---|---|
+${content}`;
+            callback(null, result);
+        }))
+        .pipe(gulp.dest(dest));
+
+    return mergeStream(sprite, names);
 });
