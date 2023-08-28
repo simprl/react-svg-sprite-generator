@@ -59,7 +59,6 @@ gulp.task('svg-sprite', () => {
                         {removeViewBox: false},
                         {cleanupIDs: false},
                         {removeAttrs: {attrs: ['fill', 'stroke']}},
-                        // { removeElementsByAttr: { id: ('bg') } },
                     ],
                 }),
             ])
@@ -119,15 +118,19 @@ export const ${name} = '${name}';
                 path.dirname(file.relative),
                 path.basename(file.relative, path.extname(file.relative))
             );
+            const srcPath = path.join(
+                src,
+                file.relative,
+            );
             const name = renameFunc3(filePath);
 
-            const result = `| ${content} | ${name} | ${filePath.split('\\').join('/')}.svg |`;
+            const result = `| ${content} | ${name} | ${filePath.split('\\').join('/')}.svg | ![](/${srcPath.split('\\').join('/')})`;
             callback(null, result);
         }))
         .pipe(concat('Readme.md', {}))
         .pipe(each(function (content, file, callback) {
-            const result = `| Icon | Name | Path |
-|---|---|---|
+            const result = `| Icon | Name | Path | Source |
+|---|---|---|---|
 ${content}`;
             callback(null, result);
         }))
