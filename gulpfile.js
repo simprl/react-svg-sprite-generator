@@ -118,13 +118,15 @@ export const ${name} = '${name}';
                 path.dirname(file.relative),
                 path.basename(file.relative, path.extname(file.relative))
             );
+
             const srcPath = path.join(
                 src,
                 file.relative,
             );
+            const relativePath = path.relative(dest, srcPath);
             const name = renameFunc3(filePath);
 
-            const result = `| ${content} | ${name} | ${filePath.split('\\').join('/')}.svg | ![](/${srcPath.split('\\').join('/')})`;
+            const result = `| ${content} | ${name} | ${filePath.split('\\').join('/')}.svg | ![](/${relativePath.split('\\').join('/')})`;
             callback(null, result);
         }))
         .pipe(concat('Readme.md', {}))

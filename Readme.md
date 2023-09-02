@@ -126,10 +126,35 @@ export const GROUP1_ICON2 = 'GROUP1_ICON2';
 For our example icons, the **Readme.md** will look like:
 
 ```plaintext
-| Icon                                   | Name          | Path            |
-|----------------------------------------|---------------|-----------------|
-| ![](data:image/png;base64,...)         | GROUP1_ICON1  | group1/icon1.svg|
-| ![](data:image/png;base64,...)         | GROUP1_ICON2  | group1/icon2.svg|
+| Icon                                   | Name          | Path            | Source                   |
+|----------------------------------------|---------------|-----------------|--------------------------|
+| <svg width="24" height="24" ....>      | GROUP1_ICON1  | group1/icon1.svg| ![](....group1/icon1.svg)|
+| <svg width="24" height="24" ....>      | GROUP1_ICON2  | group1/icon2.svg| ![](....group1/icon1.svg)|
+```
+
+### Usage in React
+
+```tsx
+import * as IconNames from './names.js';
+import spriteUrl from './sprite.svg';
+
+const Icon: IconType = ({ name:  keyof typeof IconNames }) => {
+	return (
+		<svg>
+			<use xlinkHref={`${spriteUrl}#${name}`} />
+		</svg>
+	);
+};
+export default Icon;
+
+```
+
+```javascript
+import * as IconNames from './names.js';
+import Icon  from './Icon.js';
+
+<Icon name={IconNames.ICON1} />
+
 ```
 
 ### **Conclusion**
