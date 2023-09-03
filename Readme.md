@@ -9,12 +9,12 @@ npm i --save-dev react-svg-sprite-generator
 
 **Run**:
 ```bash
-svgsprite --src ./assets/icons --dest ./src/components/Icon
+svgsprite --src ./assets/icons --dest ./src/components/Icon --docs docs/index.html
 ```
 
 **Run without installation (with npx)**:
 ```bash
-npx react-svg-sprite-generator  --src ./assets/icons --dest ./src/components/Icon
+npx react-svg-sprite-generator  --src assets/icons --dest src/components/Icon --docs docs/index.html
 ```
 
 ## **Overview**
@@ -36,7 +36,7 @@ This visual feedback is invaluable when you're trying to pick the right icon for
 
 ### Setting up Source Files
 
-Place your SVG icons in a directory. By default, the library looks for SVG files in the **./src/assets/icons** directory.
+Place your SVG icons in a directory. By default, the library looks for SVG files in the **src/assets/icons** directory.
 
 For example, let's consider the following structure:
 
@@ -60,8 +60,14 @@ svgsprite
 If you wish to specify a different source or destination directory, you can use the **\--src** and **\--dest** arguments respectively:
 
 ```bash
-svgsprite --src ./path/to/your/svg/directory --dest ./path/for/generated/files
+svgsprite --src assets/icons --dest src/components/Icon --doc docs/index.html
 ```
+
+**--src:** Source directory containing SVG icons. By default, this parameter is **assets/icons**.
+
+**--dest:** Destination directory where the generated sprite and other files will be placed. By default, this parameter is **src/components/Icon**.
+
+**--doc:** Directory where the generated documentation will be saved (Optional).
 
 ### Generated Files Structure
 
@@ -82,6 +88,8 @@ src
         ├── sprite.svg
         ├── names.js
         └── Readme.md
+docs
+└── index.html
 ```
 
 ### Understanding the Generated Files
@@ -130,6 +138,24 @@ For our example icons, the **Readme.md** will look like:
 |----------------------------------------|---------------|-----------------|--------------------------|
 | <svg width="24" height="24" ....>      | GROUP1_ICON1  | group1/icon1.svg| ![](....group1/icon1.svg)|
 | <svg width="24" height="24" ....>      | GROUP1_ICON2  | group1/icon2.svg| ![](....group1/icon1.svg)|
+```
+
+**doc/index.html**: HTML file documenting the list of icons.
+
+```html
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <!-- Styles -->
+  </head>
+  <body>
+    <table>
+      <tr><th>Icon</th><th>Name</th><th>Path</th></tr>
+      <tr><td><svg width="24" height="24" ....></td><td>GROUP1_ICON1</td><td>group1/icon1.svg</td></tr>
+      <tr><td><svg width="24" height="24" ....> </td><td>GROUP1_ICON2</td><td>group1/icon2.svg</td></tr>
+    </table>
+  </body>
+</html>
 ```
 
 ### Usage in React

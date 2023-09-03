@@ -16,14 +16,18 @@ const getArg = (name, def) => {
 }
 
 const getArgDir = (name, def) => {
-    const rootPath = getArg("--cwd", "");
     const relativePath = getArg(name, def);
+    if (relativePath === undefined) {
+        return undefined;
+    }
+    const rootPath = getArg("--cwd", "");
     const absPath = path.isAbsolute(relativePath) ? relativePath : path.join(rootPath, relativePath);
     console.log(`${name}: ${absPath}`);
     return absPath;
 }
-const getSrcDir = () => getArgDir('--src', './src/assets/icons');
-const getDestDir = () => getArgDir('--dest', './src/components/Icon');
+const getSrcDir = () => getArgDir('--src', 'src/assets/icons');
+const getDestDir = () => getArgDir('--dest', 'src/components/Icon');
+const getDocDir = () => getArgDir('--doc');
 
 const renameFunc2 = (file) => {
     const path = file.dirname === '.' ? [] : file.dirname.split('\\');
@@ -45,7 +49,8 @@ const renameFunc3 = (filePath) => {
 gulp.task('svg-sprite', () => {
     const src = getSrcDir();
     const dest = getDestDir();
-
+    const docPath = getDocDir();
+    const streams = [];
     const optimizeSvg = gulp
         .src([
             `${src}/**/*.svg`,
@@ -75,6 +80,7 @@ gulp.task('svg-sprite', () => {
         )
         .pipe(rename('sprite.svg'))
         .pipe(gulp.dest(dest))
+    streams.push(sprite);
 
     const names = optimizeSvg
         .pipe(gulpClone())
@@ -109,7 +115,7 @@ export const ${name} = '${name}';
         }))
         .pipe(concat('names.js'))
         .pipe(gulp.dest(dest));
-
+    streams.push(names);
 
     const readme = optimizeSvg
         .pipe(gulpClone())
@@ -129,7 +135,7 @@ export const ${name} = '${name}';
             const result = `| ${content} | ${name} | ${filePath.split('\\').join('/')}.svg | ![](/${relativePath.split('\\').join('/')})`;
             callback(null, result);
         }))
-        .pipe(concat('Readme.md', {}))
+        .pipe(concat('Readme.md'))
         .pipe(each(function (content, file, callback) {
             const result = `| Icon | Name | Path | Source |
 |---|---|---|---|
@@ -137,6 +143,55 @@ ${content}`;
             callback(null, result);
         }))
         .pipe(gulp.dest(dest));
+    streams.push(readme);
 
-    return mergeStream(sprite, names);
+    if (docPath) {
+        const docs = optimizeSvg
+            .pipe(gulpClone())
+            .pipe(each(function (content, file, callback) {
+                const filePath = path.join(
+                    path.dirname(file.relative),
+                    path.basename(file.relative, path.extname(file.relative))
+                );
+                const name = renameFunc3(filePath);
+
+                const result = `        <tr><td>${content}</td><td>${name}</td><td>${filePath.split('\\').join('/')}.svg</td></tr>`;
+                callback(null, result);
+            }))
+            .pipe(concat(path.basename(docPath)))
+            .pipe(each(function (content, file, callback) {
+                const result = `<!DOCTYPE html>
+<html lang="">
+    <head>
+        <style>
+            table {
+                border-collapse: collapse;
+            }
+            th {
+                text-align: center;
+                border: 1px solid darkgray;
+                padding: 4px 8px;
+            }
+            td {
+                text-align: left;
+                border: 1px solid darkgray;
+                padding: 4px 8px;
+            }
+        </style>
+    </head>
+    <body>
+        <table>
+        <tr><th>Icon</th><th>Name</th><th>Path</th></tr>
+        ${content}
+        </table>
+    </body>
+</html>
+`;
+                callback(null, result);
+            }))
+            .pipe(gulp.dest(path.dirname(docPath)));
+
+        streams.push(docs);
+    }
+    return mergeStream(...streams);
 });

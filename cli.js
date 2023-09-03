@@ -11,5 +11,7 @@ exec(`gulp svg-sprite -f ${gulpfile} --cwd ${cwd} ${args}`, (error, stdout, stde
         return;
     }
     console.log(`stdout: ${stdout}`);
-    console.error(`stderr: ${stderr}`);
+    if (stderr) {
+        console.error(`stderr: ${stderr}`);
+    }
 });
