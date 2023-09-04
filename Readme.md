@@ -158,6 +158,11 @@ For our example icons, the **Readme.md** will look like:
 </html>
 ```
 
+For more details regarding GitHub pages, please refer to the repository
+[https://github.com/simprl/my-react-icons-example](https://github.com/simprl/my-react-icons-example)
+
+![GitHub pages](./assets/github-pages.png)
+
 ### Usage in React
 
 ```tsx
@@ -183,6 +188,3 @@ import Icon  from './Icon.js';
 
 ```
 
-### **Conclusion**
-
-The **react-svg-sprite-generator** is a powerful tool for managing SVG icons in React projects. It streamlines the process of creating sprites and provides an easy-to-reference documentation for developers.
