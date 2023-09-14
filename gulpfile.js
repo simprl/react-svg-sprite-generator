@@ -52,7 +52,7 @@ gulp.task('svg-sprite', () => {
     const dest = getDestDir();
     const namesName = getArg("--names-filename", "names.js");
     const docPath = getDocDir();
-    const prependReadme = getArgDir('--dest');
+    const prependReadme = getArgDir('--prepend-readme');
     const streams = [];
     const optimizeSvg = gulp
         .src([
