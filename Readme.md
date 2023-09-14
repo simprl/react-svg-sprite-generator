@@ -2,21 +2,6 @@
 
 [![](https://img.shields.io/npm/v/react-svg-sprite-generator?style=flat)](https://www.npmjs.com/package/react-svg-sprite-generator)
 
-## Install:
-```bash
-npm i --save-dev react-svg-sprite-generator
-```
-
-**Run**:
-```bash
-svgsprite --src ./assets/icons --dest ./src/components/Icon --docs docs/index.html
-```
-
-**Run without installation (with npx)**:
-```bash
-npx react-svg-sprite-generator  --src assets/icons --dest src/components/Icon --docs docs/index.html
-```
-
 ## **Overview**
 
 The **react-svg-sprite-generator** is a library specifically designed for React.js applications. It aids in generating SVG sprites from a directory of SVG files.
@@ -33,6 +18,13 @@ the constant or view the names.js file to see a visual representation of the cor
 This visual feedback is invaluable when you're trying to pick the right icon for a specific context in your application.
 
 ## **How to Use**
+
+### Install:
+
+```bash
+npm i --save-dev react-svg-sprite-generator
+```
+
 
 ### Setting up Source Files
 
@@ -158,7 +150,8 @@ For our example icons, the **Readme.md** will look like:
 </html>
 ```
 
-For more details regarding GitHub pages, please refer to the repository
+For more details regarding GitHub pages, please refer to the example:
+
 [https://github.com/simprl/my-react-icons-example](https://github.com/simprl/my-react-icons-example)
 
 ![GitHub pages](./assets/github-pages.png)

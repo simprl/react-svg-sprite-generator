@@ -9,6 +9,7 @@ const concat = require('gulp-concat');
 const sharp = require('sharp');
 const gulpClone = require("gulp-clone");
 const mergeStream = require('merge-stream');
+const gap = require('gulp-append-prepend');
 
 const getArg = (name, def) => {
     const srcIndex = process.argv.indexOf(name);
@@ -49,7 +50,9 @@ const renameFunc3 = (filePath) => {
 gulp.task('svg-sprite', () => {
     const src = getSrcDir();
     const dest = getDestDir();
+    const namesName = getArg("--names-filename", "names.js");
     const docPath = getDocDir();
+    const prependReadme = getArgDir('--dest');
     const streams = [];
     const optimizeSvg = gulp
         .src([
@@ -113,11 +116,11 @@ export const ${name} = '${name}';
 `;
             callback(null, result);
         }))
-        .pipe(concat('names.js'))
+        .pipe(concat(namesName))
         .pipe(gulp.dest(dest));
     streams.push(names);
 
-    const readme = optimizeSvg
+    let readme = optimizeSvg
         .pipe(gulpClone())
         .pipe(each(function (content, file, callback) {
             const filePath = path.join(
@@ -132,17 +135,21 @@ export const ${name} = '${name}';
             const relativePath = path.relative(dest, srcPath);
             const name = renameFunc3(filePath);
 
-            const result = `| ${content} | ${name} | ${filePath.split('\\').join('/')}.svg | ![](/${relativePath.split('\\').join('/')})`;
+            const result = `|  ![](/${relativePath.split('\\').join('/')}) | ${name} | ${filePath.split('\\').join('/')}.svg |`;
             callback(null, result);
         }))
-        .pipe(concat('Readme.md'))
+        .pipe(concat('README.md'))
         .pipe(each(function (content, file, callback) {
-            const result = `| Icon | Name | Path | Source |
-|---|---|---|---|
+            const result = `# List of icons
+| Source | Name | Path |
+|---|---|---|
 ${content}`;
             callback(null, result);
-        }))
-        .pipe(gulp.dest(dest));
+        }));
+    if (prependReadme) {
+        readme = readme.pipe(gap.prependFile(prependReadme));
+    }
+    readme = readme.pipe(gulp.dest(dest));
     streams.push(readme);
 
     if (docPath) {
