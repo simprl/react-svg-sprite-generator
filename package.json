@@ -1,6 +1,6 @@
 {
   "name": "react-svg-sprite-generator",
-  "version": "1.0.33",
+  "version": "1.0.34",
   "description": "Svg sprite generator for Reactjs. You can generate sprite from a folder of the svg files",
   "keywords": [
     "react",

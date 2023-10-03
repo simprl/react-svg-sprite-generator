@@ -17,6 +17,10 @@ the constant or view the names.js file to see a visual representation of the cor
 **Autocomplete** in IDEs **VSCode** and **Webstorm** will show a small image preview of the icon.
 This visual feedback is invaluable when you're trying to pick the right icon for a specific context in your application.
 
+By the way, I've created a [GitHub template](https://github.com/simprl/svg-icons-sprite-example) that simplifies the process of setting up and managing SVG icon libraries in the **GitHub**.
+It also allows for easy **generation and publishing of a npm package** with the SVG sprite.
+It's a great way to streamline your icon workflow. Check it out!
+
 ## **How to Use**
 
 ### Install:
