@@ -153,10 +153,9 @@ For our example icons, the **Readme.md** will look like:
   </body>
 </html>
 ```
+GitHub pages live example: [https://simprl.github.io/svg-icons-sprite-example/](https://simprl.github.io/svg-icons-sprite-example/)
 
-For more details regarding GitHub pages, please refer to the example:
-
-[https://github.com/simprl/my-react-icons-example](https://github.com/simprl/my-react-icons-example)
+GitHub pages example source code: [https://github.com/simprl/svg-icons-sprite-example/](https://github.com/simprl/svg-icons-sprite-example/)
 
 ![GitHub pages](./assets/github-pages.png)
 
