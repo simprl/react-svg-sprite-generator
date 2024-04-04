@@ -168,7 +168,7 @@ import spriteUrl from './sprite.svg';
 const Icon: IconType = ({ name:  keyof typeof IconNames }) => {
 	return (
 		<svg>
-			<use xlinkHref={`${spriteUrl}#${name}`} />
+			<use href={`${spriteUrl}#${name}`} />
 		</svg>
 	);
 };
