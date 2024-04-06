@@ -165,13 +165,18 @@ GitHub pages example source code: [https://github.com/simprl/svg-icons-sprite-ex
 import * as IconNames from './names.js';
 import spriteUrl from './sprite.svg';
 
-const Icon: IconType = ({ name:  keyof typeof IconNames }) => {
-	return (
-		<svg>
-			<use href={`${spriteUrl}#${name}`} />
-		</svg>
-	);
+interface IconProps {
+    name: (typeof IconNames)[keyof typeof IconNames];
+}
+
+const Icon = ({ name }: IconProps ) => {
+    return (
+        <svg>
+            <use href={`${spriteUrl}#${name}`} />
+        </svg>
+    );
 };
+
 export default Icon;
 
 ```
