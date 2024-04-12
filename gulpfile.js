@@ -66,6 +66,13 @@ gulp.task('svg-sprite', () => {
                     plugins: [
                         {removeViewBox: false},
                         {cleanupIDs: false},
+                        {
+                            removeUselessStrokeAndFill: {
+                                stroke: true,
+                                fill: true,
+                                removeNone: true
+                            }
+                        },
                         {removeAttrs: {attrs: ['fill', 'stroke']}},
                     ],
                 }),
